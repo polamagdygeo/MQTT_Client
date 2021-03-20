@@ -39,13 +39,13 @@ typedef struct{
     char topic[100];  /*therortically max topic size = 2^16 - 1*/
     uint16_t len;
     tMqttClient_Status status;
-}tMqttClient_Res;
+}tMqttClient_Response;
 
-typedef void (*mqtt_callback)(tMqttClient_Res*);
+typedef void (*mqtt_callback)(tMqttClient_Response*);
 
 /* Exported functions -------------------------------------------------------*/
-void MqttClient_Config(const char*const host_ip,const uint16_t port,const char* client_id,mqtt_callback cb);
-void MqttClient_Init(void);
+void MqttClient_Init(const char*const host_ip,const uint16_t port,const char* client_id,mqtt_callback cb);
+void MqttClient_Start(void);
 void MqttClient_Connect(void);
 void ICACHE_FLASH_ATTR MqttClient_Sub(const char* topic,uint8_t qos);
 void MqttClient_Pub(const char* topic,const char* payload,const uint16_t len);

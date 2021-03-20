@@ -12,8 +12,10 @@
 #include "mem.h"
 #include "debug.h"
 
+#define MAX_CONN_NO 5 /*Maximum supported concurrent connection by esp*/
+
 /* Private variables ---------------------------------------------------------*/
-static uint8_t Active_Conn_No = 0;
+static uint8_t active_conn_count = 0;
 
 /**
     *@brief 
@@ -24,7 +26,7 @@ struct espconn *TcpMgr_OpenConn(void)
 {
     struct espconn *pConn = 0;
 
-    if(Active_Conn_No < MAX_CONN_NO)
+    if(active_conn_count < MAX_CONN_NO)
     {
         pConn = os_zalloc(sizeof(struct espconn));
 
@@ -38,7 +40,7 @@ struct espconn *TcpMgr_OpenConn(void)
                 pConn->type = ESPCONN_TCP;
                 pConn->state = ESPCONN_NONE;
 
-                Active_Conn_No++;
+                active_conn_count++;
             }
             else
             {
@@ -65,8 +67,8 @@ void TcpMgr_CloseConn(struct espconn * pConn)
     }
     os_free(pConn);
 
-    if(Active_Conn_No > 0)
+    if(active_conn_count > 0)
     {
-        Active_Conn_No--;
+        active_conn_count--;
     }
 }

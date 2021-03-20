@@ -88,7 +88,7 @@ static tMqttClient_Config config;
 static struct espconn *tcp_conn;
 static uint8_t is_connected = 0;
 static os_event_t	*initQueue;
-static tMqttClient_Res res;
+static tMqttClient_Response res;
 static uint8_t out_msg_buffer[MAX_MSG_LEN];
 static uint16_t curr_out_msg_id;
 
@@ -131,8 +131,8 @@ static uint8_t ICACHE_FLASH_ATTR MqttClient_EncodeRemainingLength(uint32_t len,c
 {
     uint8_t itr = 0;
 
-    while(itr < 4 &&
-        len > 0)
+    while((itr < 4) &&
+        (len > 0))
     {
         buffer[itr++] = len >= 127 ? (127 | (1 << 7)) : len;
 
@@ -181,7 +181,7 @@ static void ICACHE_FLASH_ATTR MqttClient_ConnectionCb(void* arg)
     os_printf("\nBuilt CONN msg :\n");
     for(i = 0 ; i < msg_itr ; i++)
     {
-     os_printf("%x ",out_msg_buffer[i]);
+        os_printf("%x ",out_msg_buffer[i]);
     }
     os_printf("\n");
 }
@@ -334,7 +334,7 @@ static void ICACHE_FLASH_ATTR MqttClient_ReconnCb(void* arg,sint8 error_code)
     *@param void
     *@retval void
 */
-void ICACHE_FLASH_ATTR MqttClient_Config(const char*const host_ip,const uint16_t port,const char* client_id,mqtt_callback cb)
+void ICACHE_FLASH_ATTR MqttClient_Init(const char*const host_ip,const uint16_t port,const char* client_id,mqtt_callback cb)
 {
     config.host_ip[0] = atoi(strtok(host_ip,"."));
     config.host_ip[1] = atoi(strtok(0,"."));
@@ -351,7 +351,7 @@ void ICACHE_FLASH_ATTR MqttClient_Config(const char*const host_ip,const uint16_t
     *@param void
     *@retval void
 */
-void ICACHE_FLASH_ATTR MqttClient_Init(void)
+void ICACHE_FLASH_ATTR MqttClient_Start(void)
 {
     struct ip_info ipConfig;
 
@@ -426,7 +426,7 @@ void ICACHE_FLASH_ATTR MqttClient_Sub(const char* topic,uint8_t qos)
         os_printf("\nBuilt SUB msg :\n");
         for(i = 0 ; i < msg_itr ; i++)
         {
-        os_printf("%x ",out_msg_buffer[i]);
+            os_printf("%x ",out_msg_buffer[i]);
         }
         os_printf("\n");
     }

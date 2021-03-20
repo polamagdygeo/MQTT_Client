@@ -12,8 +12,6 @@
 
 #include "espconn.h"
 
-#define MAX_CONN_NO 5 /*Maximum supported concurrent connection by esp*/
-
 /* Exported functions -------------------------------------------------------*/
 struct espconn *TcpMgr_OpenConn(void);
 void TcpMgr_CloseConn(struct espconn * pConn);
